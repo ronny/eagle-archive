@@ -3,7 +3,8 @@
 
   (:require [qbits.alia     :as alia]
             [qbits.hayt     :as h]
-            [clojure.pprint :as pprint]))
+            [clojure.pprint :as pprint]
+            [eagle-archive.timestamp :as ts]))
 
 (def ^:private cluster
   (alia/cluster {:contact-points ["localhost"]}))
@@ -14,9 +15,11 @@
     (h/create-table :demand_events
                     (h/if-not-exists)
                     (h/column-definitions {:meter_mac_id :text
+                                           :hour         :text
                                            :event_time   :timestamp
                                            :demand_in_kw :decimal
-                                           :primary-key [:meter_mac_id :event_time]})
+                                           :primary-key [[:meter_mac_id :hour]
+                                                         :event_time]})
                     (h/with {:clustering-order [[:event_time :desc]]}))))
 
 (defn- create-raw-events-table [session]
@@ -24,11 +27,13 @@
     session
     (h/create-table :raw_events
                     (h/if-not-exists)
-                    (h/column-definitions {:event_time    :timestamp
+                    (h/column-definitions {:device_mac_id :text
+                                           :hour          :text
+                                           :event_time    :timestamp
                                            :type          :text
-                                           :device_mac_id :text
                                            :data          :text
-                                           :primary-key [:device_mac_id :event_time]})
+                                           :primary-key [[:device_mac_id :hour]
+                                                         :event_time]})
                     (h/with {:clustering-order [[:event_time :desc]]}))))
 
 (defn connect
@@ -49,10 +54,12 @@
     (create-demand-events-table session)
     session))
 
+
 (defn record-demand [session {:keys [:meter-mac-id
                                      :timestamp
                                      :demand-in-kw]}]
   (let [values [[:meter_mac_id meter-mac-id]
+                [:hour         (ts/hour timestamp)]
                 [:event_time   timestamp]
                 [:demand_in_kw demand-in-kw]]
         query (h/insert :demand_events
@@ -67,9 +74,10 @@
                                   :device-mac-id
                                   :attribute-map]}]
   (let [query (h/insert :raw_events
-                (h/values [[:event_time    timestamp]
+                (h/values [[:device_mac_id device-mac-id]
+                           [:hour          (ts/hour timestamp)]
+                           [:event_time    timestamp]
                            [:type          (pr-str event-type)]
-                           [:device_mac_id device-mac-id]
                            [:data          (pr-str attribute-map)]]))]
     ; (pprint/pprint (h/->raw query))
     (alia/execute session query)))
