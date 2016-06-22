@@ -14,13 +14,13 @@
     (= :post (:request-method req))
     (some? event-type)))
 
-(defn- respond-with-success [event-type]
+(defn- success-response [event-type]
   (println "200 " event-type)
   {:status  200
    :headers {"Content-Type" "text/plain"}
    :body    "OK"})
 
-(defn- respond-with-sadness []
+(defn- unprocessable-response []
   {:status  422
    :headers {"Content-Type" "text/plain"}
    :body    "Unprocessable Entity"})
@@ -34,11 +34,11 @@
                                              :meter-mac-id]))
       (recorder/record-demand session parsed-data)))
   (recorder/record-raw session parsed-data)
-  (respond-with-success event-type))
+  (success-response event-type))
 
 (defn app [req]
   (let [request-body (request/body-string req)
         {:keys [:event-type] :as parsed-data} (parser/parse request-body)]
     (if (valid-request? req event-type)
       (process parsed-data)
-      (respond-with-sadness req request-body))))
+      (unprocessable-response req request-body))))

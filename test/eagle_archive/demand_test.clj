@@ -19,3 +19,13 @@
         (demand/parse valid-attribute-map) =>
           {:meter-mac-id "00:11:22:33:44:55:66:77"
            :demand-in-kw 1.386M})) ; the M is a notation for big decimal, not million or mega
+
+
+(facts "demand/demand-in-kw"
+  (tabular
+    (fact "returns demand * multiplier / divisor"
+          (demand/demand-in-kw ?demand ?multiplier ?divisor) => ?expected)
+    ?demand  ?multiplier  ?divisor  ?expected
+    1234     1            1000      1.234M
+    1        1            1         1M
+    nil      nil          nil       nil))

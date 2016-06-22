@@ -68,7 +68,7 @@
                                   :attribute-map]}]
   (let [query (h/insert :raw_events
                 (h/values [[:event_time    timestamp]
-                           [:type          (str event-type)]
+                           [:type          (pr-str event-type)]
                            [:device_mac_id device-mac-id]
                            [:data          (pr-str attribute-map)]]))]
     ; (pprint/pprint (h/->raw query))

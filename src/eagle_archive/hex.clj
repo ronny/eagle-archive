@@ -25,9 +25,7 @@
 
 ; TODO: this doesn't belong in this ns
 (defn- present? [thing]
-  (and
-    (some? thing)
-    (< 0 (count thing))))
+  (not (string/blank? thing)))
 
 (defn format-as-mac-addr
   "Formats given hex string as a normalised MAC address.

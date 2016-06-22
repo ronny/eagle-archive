@@ -4,6 +4,18 @@
             [clj-time.coerce   :as c]
             [eagle-archive.hex :as hex]))
 
+(defn unix->iso8601
+  "Converts a unix timestamp integer to an ISO8601 formatted string.
+  e.g. 1466517985 → `2016-06-21T14:06:25Z`"
+  [^Long unix-timestamp]
+
+  (f/unparse (f/formatters :date-time-no-ms)
+             (c/from-long (* 1000 unix-timestamp))))
+
+; -------------------------------------------------------------------------
+; TODO: everything below can probably be deleted once we determine we don't
+; need to interpret <TimeStamp> values.
+
 (def ^:private epoch-offset
   "This is what the Eagle Z109 considers as its epoch."
   (c/to-long (t/date-time 2000 1 1)))
@@ -29,11 +41,3 @@
   ; Seconds since 1 Jan 2000 UTC when demand data was received from meter
   (let [seconds (hex/to-int parsed-timestamp)]
     (seconds->iso8601 seconds)))
-
-(defn unix->iso8601
-  "Converts a unix timestamp integer to an ISO8601 formatted string.
-  e.g. 1466517985 → `2016-06-21T14:06:25Z`"
-  [^Long unix-timestamp]
-
-  (f/unparse (f/formatters :date-time-no-ms)
-             (c/from-long (* 1000 unix-timestamp))))
