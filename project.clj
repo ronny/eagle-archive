@@ -5,8 +5,8 @@
             :url ""}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/data.xml "0.0.8"]
-                 [ring/ring-core "1.5.0"]
-                 [ring/ring-jetty-adapter "1.5.0"]
+                 [compojure "1.5.1"]
+                 [ring/ring-defaults "0.2.1"]
                  [cc.qbits/alia-all "3.1.8"]
                  [cc.qbits/hayt "3.0.1"]
                  [clj-time "0.12.0"]]

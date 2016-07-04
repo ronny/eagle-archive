@@ -1,5 +1,8 @@
 (ns eagle-archive.web
-  (:require [ring.util.request      :as request]
+  (:require [compojure.core :refer :all]
+            [compojure.route :as route]
+            [ring.util.request :as request]
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [clojure.data.xml       :as xml]
             [clojure.pprint         :as pprint]
             [eagle-archive.recorder :as recorder]
@@ -36,9 +39,16 @@
   (recorder/record-raw session parsed-data)
   (success-response event-type))
 
-(defn app [req]
+(defn create-event [req]
   (let [request-body (request/body-string req)
         {:keys [:event-type] :as parsed-data} (parser/parse request-body)]
     (if (valid-request? req event-type)
       (process parsed-data)
       (unprocessable-response req request-body))))
+
+(defroutes app-routes
+  (POST "/" req (create-event req))
+  (route/not-found "<h1>Page not found</h1>"))
+
+(def app
+  (wrap-defaults app-routes api-defaults))
