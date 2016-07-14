@@ -1,8 +1,8 @@
-(defproject eagle-archive "0.1.0-SNAPSHOT"
+(defproject eagle-archive "0.1.0"
   :description "Cloud endpoint web app for archiving data from Rainforest Automation Eagle devices"
-  :url "http://example.com/FIXME"
-  :license {:name "UNLICENSED"
-            :url ""}
+  :url "https://github.com/ronny/eagle-archive"
+  :license {:name "Eclipse Public License 1.0"
+            :url "https://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/data.xml "0.0.8"]
                  [compojure "1.5.1"]
