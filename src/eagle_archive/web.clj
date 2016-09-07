@@ -18,7 +18,7 @@
     (some? event-type)))
 
 (defn- success-response [event-type]
-  (println "200 " event-type)
+  ; (println "200 " event-type)
   {:status  200
    :headers {"Content-Type" "text/plain"}
    :body    "OK"})
@@ -34,7 +34,8 @@
   (if (= event-type demand/event-type)
     (do
       (pprint/pprint (select-keys parsed-data [:demand-in-kw
-                                             :meter-mac-id]))
+                                               :timestamp
+                                               :meter-mac-id]))
       (recorder/record-demand session parsed-data)))
   (recorder/record-raw session parsed-data)
   (success-response event-type))
