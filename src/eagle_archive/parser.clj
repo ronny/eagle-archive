@@ -27,9 +27,9 @@
   (let [raw-string (-> parsed-xml-string :attrs :timestamp)]
     (try
       (Long/parseLong (string/replace raw-string #"s$" ""))
-    (catch NumberFormatException e
-      (println "WTF unable to parse unix timestamp?" raw-string)
-      nil))))
+     (catch NumberFormatException e
+       (println "WTF unable to parse unix timestamp?" raw-string)
+       nil))))
 
 (defn- extract-type [event-node]
   (:tag event-node))
