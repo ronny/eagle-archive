@@ -5,12 +5,13 @@
             :url "https://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/data.xml "0.0.8"]
-                 [compojure "1.5.1"]
-                 [ring/ring-defaults "0.2.1"]
-                 [cc.qbits/alia-all "3.1.8"]
-                 [cc.qbits/hayt "3.0.1"]
-                 [clj-time "0.12.0"]]
+                 [com.taoensso/timbre "4.10.0"]
+                 [compojure "1.6.0"]
+                 [ring/ring-defaults "0.3.1"]
+                 [cc.qbits/alia-all "4.0.2"]
+                 [cc.qbits/hayt "4.0.0"]
+                 [clj-time "0.14.0"]]
   :profiles {:dev {:dependencies [[midje "1.8.3"]]
-                   :plugins [[lein-midje "3.2"]
-                             [lein-ring "0.9.7"]]}}
+                   :plugins [[lein-midje "3.2.1"]
+                             [lein-ring "0.12.1"]]}}
   :ring {:handler eagle-archive.web/app})
